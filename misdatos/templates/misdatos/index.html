@@ -16,20 +16,17 @@
 </head>
 <body>
     <header>
-         {% block titulo1 %}
+         {% block titulo %}
         <h1 class="site-heading text-center text-faded d-none d-lg-block">
             <span class="site-heading-upper text-primary mb-3">Tu Cafe mas Cercano </span>
             <span class="site-heading-lower">Tomate Un Cafe en nuestro CoffeShop</span>
         </h1>
-    {% endblock titulo1 %}
-         {% block titulo2 %}
         <h1>Bienvenidos a Somos Argentina Coffe Shopp</h1>
-    {% endblock titulo2 %}
+    {% endblock titulo %}
     </header>
     {%block contenido %}
 
     {%endblock contenido %}
-
 
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-dark py-lg-4" id="mainNav">
@@ -39,12 +36,13 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href={% url 'index' %}"index.html">Inicio</a></li>
-                    <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href={% url 'about' %}"about.html">Acerca de</a></li>
-                    <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href={% url 'products' %}"products.html">Productos</a></li>
-                    <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href={% url 'store' %}"store.html">Tienda</a></li>
-                </ul>
+                <ul <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="{% url 'home' %}">Inicio</a></li>
+                    <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="{% url 'acercade' %}">Acerca de</a></li>
+                    <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="{% url 'products' %}">Productos</a></li>
+                    <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="{% url 'tienda' %}">Tienda</a></li>
+                    <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="{% url 'tusdatos' %}">Formulario</a></li>
+
+                </ul>   
             </div>
         </div>
     </nav>

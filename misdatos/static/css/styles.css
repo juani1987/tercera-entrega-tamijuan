@@ -10,6 +10,16 @@
  * Copyright 2011-2022 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+ 
+productos {
+  color: whitesmoke;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: medium;
+  display: block;
+  padding: auto;
+  margin-top: auto;
+  margin: auto;
+}
 :root {
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
@@ -312,6 +322,12 @@ svg {
 table {
   caption-side: bottom;
   border-collapse: collapse;
+  background-color: #8bb617;
+  text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin-top: auto;
+  padding: auto;
+  display: inline-block;
 }
 
 caption {
@@ -1751,9 +1767,11 @@ progress {
   --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
   width: 100%;
   margin-bottom: 1rem;
-  color: var(--bs-table-color);
-  vertical-align: top;
+  color:rgb(20, 163, 144);
   border-color: var(--bs-table-border-color);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: medium;
+  font-style: var(--bs-accordion-active-bg);
 }
 .table > :not(caption) > * > * {
   padding: 0.5rem 0.5rem;
