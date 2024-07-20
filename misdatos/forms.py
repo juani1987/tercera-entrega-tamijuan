@@ -1,19 +1,29 @@
 from django import forms
-from misdatos.moduls import*  # Asegúrate de que el modelo esté correctamente importado
+from misdatos.moduls import*  
+from django.contrib.auth.models import AbstractUser
 
 
 class ClienteForm(forms.Form):
-    nombre = forms.CharField(max_length=50, required=True)
-    apellido = forms.IntegerField(required=True)
+    first_name = forms.CharField(max_length=50, required=True)
+    last_name = forms.CharField(max_length=50, required=True)
     email = forms.EmailField(label="Email", required=False)
-    Descuentos = (
-        (1, "HotSale"),
-        (2, "TardesDeCafe"),
-        (3, "SuperPromoSaleCafe"),
+    Opciones = (
+        (1, "Dejanos Tu Comntario y Ganate un Cafe"),
+        (2, "Hacer Sugerencias"),
+        (3, "Reclamos"),
     )
-    show = forms.ChoiceField(label="Turno elegido", choices=Descuentos, required=True)
+    show = forms.ChoiceField(label="Subs", choices=Opciones, required=True)
     aplicado = forms.BooleanField()
     
-    
+class CustomUser(AbstractUser):
+    username = models.CharField('nombre de usuario', unique=True, max_length=150)
+    password = models.CharField('password',unique=True, max_length=150)
 
+# En tu formulario de registro
+class RegisterForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'password', ...]
+
+    
     

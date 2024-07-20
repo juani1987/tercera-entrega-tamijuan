@@ -23,7 +23,16 @@ urlpatterns = [
     path('productos/', productos, name="products"),
     path('about/', acercade, name="acercade"),
     path('store/', tienda, name="tienda"),
-    path('index/', inicio, name="home"),  
-    path('formulario',tusdatos, name='tusdatos')
+    path('index/', inicio, name="home"),
+    #Formulario  
+    path('formulario/', tusdatos, name='tusdatos'),
+    path('clinteform/', clinte, name="clinte" ),
+    path('update_profesor/<id_profesor>/', updateClinte, name="update_Clinte" ),
+    path('delete_profesor/<id_profesor>/', deleteClinte, name="delete_Clinte" ),
+    path('create_profesor/', createClinte, name="create_Clinte" ),  
+    #Funcion Busqueda
+    path('buscarProductos', buscarProducto , name ="buscar"),
+    path('buscar2/', buscar2, name="buscar"),
+    path('register',register,name= "register")  
 ]
 

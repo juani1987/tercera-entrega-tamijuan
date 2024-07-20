@@ -7,7 +7,7 @@ class Cliente(models.Model): # modelo de clinte
     last_name = models.CharField(max_length=100)   # Apellido del cliente
     email = models.EmailField()  
     def __str__(self): 
-        return f'{self.nombre},{self.apellido},{self.email}' 
+        return f'{self.first_name},{self.last_name},{self.email}' 
 class Meta:
     verbose_name = "nombre"
     verbose_name_prural ="Nombres"
@@ -31,7 +31,7 @@ class Factura(models.Model): #modelo de facturación
     comprobante = models.CharField(max_length=50) #Comprobante de la Factura emitida
     
     def __str__(self): #metodo str para mostrar al usuario su facturación
-        return f'{self.articulo},{self.cantidad},{self.fecha_de_emision},{self.comprobante}'
+        return f'{self.articulo},{self.comprobante},{self.fecha_de_emision},'
 
 class Envio (models.Model): #modelo de envio de productos
     direccion = models.CharField(max_length=50) #Dirrecion del Remito 
@@ -54,7 +54,10 @@ class Pedido(models.Model):
     def __str__(self):
         return self.nombre_cliente
 
-
-
+class User (models.Model):
+    nombre = models.CharField(max_length=50)
+    apellido = models.CharField(max_length=50)
+    email = models.EmailField()
+    password = models.BooleanField()
 
 

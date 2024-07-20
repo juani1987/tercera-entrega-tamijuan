@@ -1,0 +1,16 @@
+{% extends 'misdatos/index.html' %}
+{% load static %}
+
+{% block titulo %}
+    <h1 class="mb-5">Buscar Productos en nuestras tiendas </h1>
+{% endblock titulo %}
+
+{% block contenido %}
+    <form action = "{% url 'buscar2' %}" method="get">
+        {% csrf_token %}
+        <table>
+            <p>Aqui Puedes Buscar Tus Productos <input type="text" name="buscar" id="buscar"><input></p>>
+        </table>
+        <input type="submit" value="buscar">
+    </form>
+{% endblock contenido %}
