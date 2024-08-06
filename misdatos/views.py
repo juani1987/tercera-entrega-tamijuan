@@ -55,7 +55,7 @@ def clinte(request):
     ctx = {'clinte': Cliente.objects.all()}
     return render(request, "misdatos/clintesform.html", ctx)
 #Clinte Update
-def updateClinte(request, id_cliente):
+def updateCliente(request, id_cliente):
     clinte = Cliente.objects.get(id=id_cliente)
     if request.method == "POST":
         miForm = ClienteForm(request.POST)
@@ -75,7 +75,7 @@ def updateClinte(request, id_cliente):
     return render(request, "misdatos/clintesform.html", {'form': miForm})
 
 #CRUD CLIENTE
-def deleteClinte(request, id_cliente):
+def deleteCliente(request, id_cliente):
     cliente= Cliente.objects.get(id=id_cliente)
     cliente.delete()
     return redirect(reverse_lazy('clinte'))
@@ -98,23 +98,87 @@ def createClinte(request):
     return render(request, "misdatos/formulario.html", {"form":miForm})
 
 # loging clinte 
-  # Asegúrate de importar tu formulario de registro adecuadamente
+#Para el login
+
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, logout, authenticate
+
+def logout_request(request):
+      logout(request)
+     
+      return redirect("inicio")
+     
+
+def login_request(request):
+
+      if request.method == "POST":
+            form = AuthenticationForm(request, data = request.POST)
+
+            if form.is_valid():
+                  usuario = form.cleaned_data.get('username')
+                  contra = form.cleaned_data.get('password')
+
+                  user = authenticate(username=usuario, password=contra)
+
+            
+                  if user is not None:
+                        login(request, user)
+                       
+                        return render(request,"misdatos/index.html",  {"mensaje":f"Bienvenido {usuario}"} )
+                  else:
+                        
+                        return render(request,"misdatos/index.html", {"mensaje":"Error, datos incorrectos"} )
+
+            else:
+                        
+                        return render(request,"misdatos/index.html" ,  {"mensaje":"Error, formulario erroneo"})
+
+      form = AuthenticationForm()
+
+      return render(request,"misdatos/login.html", {'form':form} )
 
 def register(request):
-    if request.method == "POST":
-        myForm = RegisterForm(request.POST)
-        if myForm.is_valid():
-            username = myForm.cleaned_data.get("username")
-            if User.objects.filter(username=username).exists():
-                myForm.add_error("username", "Nombre de usuario no disponible.")
+    if request.method == 'POST':
+
+            #form = UserCreationForm(request.POST)
+            form = UserRegisterForm(request.POST)
+            if form.is_valid():
+
+                  username = form.cleaned_data['username']
+                  form.save()
+                  return render(request,"misdatos/index.html" ,  {"mensaje":"Usuario Creado :)"})
             else:
-                myForm.save()
-                # Redirige a la página de éxito 
-                return redirect("misdatos/index.html")  
-    else:
-        myForm = RegisterForm()
+            #form = UserCreationForm()       
+             form = UserRegisterForm()     
+            return render(request,"misdatos/registro.html" ,  {"form":form})
     
-    return render(request, "misdatos/registro.html", {"form": myForm})
+def editarPerfil(request):
+
+      #Instancia del login
+      usuario = request.user
+     
+      #Si es metodo POST hago lo mismo que el agregar
+      if request.method == 'POST':
+            miFormulario = UserEditForm(request.POST) 
+            if miFormulario.is_valid:   #Si pasó la validación de Django
+
+                  informacion = miFormulario.cleaned_data
+            
+                  #Datos que se modificarán
+                  usuario.email = informacion['email']
+                  usuario.password1 = informacion['password1']
+                  usuario.password2 = informacion['password1']
+                  usuario.save()
+
+                  return render(request, "misdatos/index.html") #Vuelvo al inicio o a donde quieran
+      #En caso que no sea post
+      else: 
+            #Creo el formulario con los datos que voy a modificar
+            miFormulario= UserEditForm(initial={ 'email':usuario.email}) 
+
+      #Voy al html que me permite editar
+      return render(request, "AppCoder/editarPerfil.html", {"miFormulario":miFormulario, "usuario":usuario})
+
 
 
 # Busqueda De Productos 

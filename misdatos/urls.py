@@ -17,7 +17,6 @@ Including another URLconf
 from django.urls import path, include
 from misdatos.views import *
 
-
 urlpatterns = [
     path('', inicio, name="inicio"),
     path('productos/', productos, name="products"),
@@ -26,13 +25,16 @@ urlpatterns = [
     path('index/', inicio, name="home"),
     #Formulario  
     path('formulario/', tusdatos, name='tusdatos'),
-    path('clinteform/', clinte, name="clinte" ),
-    path('update_profesor/<id_profesor>/', updateClinte, name="update_Clinte" ),
-    path('delete_profesor/<id_profesor>/', deleteClinte, name="delete_Clinte" ),
-    path('create_profesor/', createClinte, name="create_Clinte" ),  
-    #Funcion Busqueda
+    path('clienteform/', clinte, name="cliente" ),
+    path('update_Clinte/<id_cliente>/', updateCliente, name="updateCliente" ),
+    path('delete_Clinte/<id_cliente>/', deleteCliente, name="delete_Cliente" ),
+    path('create_clinte/', createClinte, name="create_Clinte" ),  
     path('buscarProductos', buscarProducto , name ="buscar"),
     path('buscar2/', buscar2, name="buscar"),
-    path('register',register,name= "register")  
+    path('register',register,name= "register"), 
+    path('login', login_request, name = 'Login'),
+    path('register', register, name = 'Register'),
+    path('logout', LogoutView.as_view(template_name='misdatos/logout.html'), name = 'Logout'),
+
 ]
 

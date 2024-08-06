@@ -1,3 +1,4 @@
+from typing import AbstractSet
 from django.db import models
 
 #Modelo de la aplicacion (negocio Tienda de Café)
@@ -52,12 +53,30 @@ class Pedido(models.Model):
     extras = models.TextField(blank=True)
 
     def __str__(self):
-        return self.nombre_cliente
+        return f"Tu Pedido {self.bebida}, {self.extras} esta esta en proceso , por favor {self.nombre_cliente} indicanos si queres agregar algo mas " 
+
+class CustomUser(AbstractSet):
+    username = models.CharField(max_length=150)
+    email = models.EmailField()
+    password1 = models.CharField(max_length=150)
+    password2 = models.CharField(max_length=150) 
+    last_name = models.CharField(max_length=150)
+    first_name = models.CharField(max_length=150)
+class Meta:
+    verbose_name = "Usuario"
+    verbose_name_prural ="Usuarios"
+    ordening =["Usuario", "datos"]
+  
+
+   
+
 
 class User (models.Model):
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     email = models.EmailField()
     password = models.BooleanField()
+
+
 
 
