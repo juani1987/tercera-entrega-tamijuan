@@ -2,18 +2,18 @@
 
 
 {% block titulo %}
-<h1 class="mb-5">Registración</h1>                                
+<h1 class="mb-5">Avatar</h1>                                
 {% endblock titulo %}
 
 
 {% block contenido %}   
 
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <table>
         {{ form.as_table }}
     </table>
-    <input type="submit" value="Registrarse">
+    <input type="submit" value="Actualizar Avatar">
 </form>
 
 {% endblock contenido %}

@@ -1,5 +1,7 @@
+from msilib.schema import ListView
 from shutil import register_archive_format
 from typing import Self
+from winreg import CreateKey
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -9,8 +11,26 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 
+from django.views.generic import ListView
+from django.views.generic import CreateView
+from django.views.generic import UpdateView
+from django.views.generic import DeleteView
+
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import PasswordChangeView
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+
+from django.views.generic import ListView
+from django.views.generic import CreateView
+from django.views.generic import UpdateView
+from django.views.generic import DeleteView
+from misdatos.forms import AvatarForm
 
 
 
@@ -107,86 +127,155 @@ def createClinte(request):
 #Para el login
 
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate 
 
-def logout_request(request):
-      logout(request)
-     
-      return redirect("inicio")
-     
+@login_required
+def nuevoclinte(request):
+    contexto = {"clinte": Cliente.objects.all()}
+    return render(request, "misdatos/clinte.html", contexto)
 
-def login_request(request):
+@login_required
+def clinteForm(request):
+    if request.method == "POST":
+        miForm = ClienteForm(request.POST)
+        if miForm.is_valid():
+            nombre = miForm.cleaned_data.get("nombre")
+            apellido = miForm.cleaned_data.get("apellido")
+            cliente = Cliente(first_name= nombre, last_name = apellido)
+            cliente.save()
+            contexto = {"clintes": Cliente.objects.all() }
+            return render(request, "misdatos/clinte.html", contexto)
+    else:
+        miForm = clinteForm()
+    
+    return render(request, "entidades/cursoForm.html", {"form": miForm})
 
-      if request.method == "POST":
-            form = AuthenticationForm(request, data = request.POST)
+@login_required
+def clinteUpdate(request, id_curso):
+    cliente = Cliente.objects.get(id=id_curso)
+    if request.method == "POST":
+        miForm = ClienteForm(request.POST)
+        if miForm.is_valid():
+            cliente.nombre= miForm.cleaned_data.get("nombre")
+            cliente.apellido = miForm.cleaned_data.get("apellido")
+            cliente.save()
+            contexto = {"cliente": Cliente.objects.all() }
+            return render(request, "misdatos/clintes.html", contexto)       
+    else:
+        miForm = ClienteForm(initial={"nombre": cliente.nombre, "apellido":  cliente.apellido}) 
+    
+    return render(request, "misdatos/clintesform.html", {"form": miForm})
 
-            if form.is_valid():
-                  usuario = form.cleaned_data.get('username')
-                  contra = form.cleaned_data.get('password')
+@login_required
+def clinteDelete(request, id_curso):
+    clinte = Cliente.objects.get(id=id_curso)
+    clinte.delete()
+    contexto = {"clinte": Cliente.objects.all() }
+    return render(request, "misdatos/clintes.html", contexto)     
+#class ClientesList(LoginRequiredMixin, ListView):
+   # model = Cliente
 
-                  user = authenticate(username=usuario, password=contra)
+#lass createClinte (LoginRequiredMixin, CreateView):
+    #model = Cliente
+   # fields = ["nombre", "apellido", "email"]
+   ## success_url = reverse_lazy("estudiantes")
 
-            
-                  if user is not None:
-                        login(request, user)
-                       
-                        return render(request,"misdatos/index.html",  {"mensaje":f"Bienvenido {usuario}"} )
-                  else:
-                        
-                        return render(request,"misdatos/index.html", {"mensaje":"Error, datos incorrectos"} )
+#class updateCliente (LoginRequiredMixin, UpdateView):
+   # model = Cliente
+    ##fields = ["nombre", "apellido", "email"]
+   # success_url = reverse_lazy("estudiantes")
 
-            else:
-                        
-                        return render(request,"misdatos/index.html" ,  {"mensaje":"Error, formulario erroneo"})
+#class deleteCliente (LoginRequiredMixin, DeleteView):
+   # model = Cliente
+    #success_url = reverse_lazy("estudiantes")
 
-      form = AuthenticationForm()
 
-      return render(request,"misdatos/login.html", {'form':form} )
+def loginRequest(request):
+    if request.method == "POST":
+        usuario = request.POST["username"]
+        clave = request.POST["password"]
+        user = authenticate(request, username=usuario, password=clave)
+        if user is not None:
+            login(request, user)
+
+            #_______ Buscar Avatar
+            try:
+                avatar = avatar.objects.get(user=request.user.id).imagen.url
+            except:
+                avatar = "/media/avatares/default.png"
+            finally:
+                request.session["avatar"] = avatar
+            #______________________________________________________________
+            return render(request, "misdatos/index.html")
+        else:
+            return redirect(reverse_lazy('login'))
+
+    else:
+        miForm = AuthenticationForm()
+
+    return render(request, "misdatos/login.html", {"form": miForm})
 
 def register(request):
-    if request.method == 'POST':
+    if request.method == "POST":
+        miForm = RegistroForm(request.POST)
+        if miForm.is_valid():
+            #usuario = miForm.cleaned_data.get("username")
+            miForm.save()
+            return redirect(reverse_lazy('home'))
+    else:
+        miForm = RegistroForm()
 
-            #form = UserCreationForm(request.POST)
-            form = UserRegisterForm(request.POST)
-            if form.is_valid():
+    return render(request, "misdatos/registro.html", {"form": miForm})   
+# Edicion de perfil y Avatar
 
-                  username = form.cleaned_data['username']
-                  form.save()
-                  return render(request,"misdatos/index.html" ,  {"mensaje":"Usuario Creado :)"})
-            else:
-            #form = UserCreationForm()       
-             form = UserRegisterForm()     
-            return render(request,"misdatos/registro.html" ,  {"form":form})
-    
-def editarPerfil(request):
+def editPerfil(request):
+    usuario = request.user 
+    if request.method == "POST":
+        miForm = UserEditForm(request.POST)
+        if miForm.is_valid():
+            user = User.objects.get(username = usuario )
+            user.email = miForm.cleaned_data.get ("email")
+            user.nombre = miForm.cleaned_data.get("nombre")
+            user.apellido = miForm.changed_data.get("apellido")
+            user.save()
+        return redirect (reverse_lazy ("index"))
+    else: 
+        miForm = UserEditForm (isinstance= usuario)
+    return request ("misdatos/editarPerfil.html", {"form": miForm})
 
-      #Instancia del login
-      usuario = request.user
-     
-      #Si es metodo POST hago lo mismo que el agregar
-      if request.method == 'POST':
-            miFormulario = UserEditForm(request.POST) 
-            if miFormulario.is_valid:   #Si pasó la validación de Django
+def inicio(request):
 
-                  informacion = miFormulario.cleaned_data
-            
-                  #Datos que se modificarán
-                  usuario.email = informacion['email']
-                  usuario.password1 = informacion['password1']
-                  usuario.password2 = informacion['password1']
-                  usuario.save()
+      avatares = Avatar.objects.filter(user=request.user.id)
+      
+      return render(request, "misdatos/index.html", {"url":avatares[0].imagen.url})
 
-                  return render(request, "misdatos/index.html") #Vuelvo al inicio o a donde quieran
-      #En caso que no sea post
-      else: 
-            #Creo el formulario con los datos que voy a modificar
-            miFormulario= UserEditForm(initial={ 'email':usuario.email}) 
+def agregarAvatar(request):
+    if request.method == "POST":
+        miForm = AvatarForm(request.POST, request.FILES)
+        if miForm.is_valid():
+            usuario = User.objects.get(username=request.user)
+            imagen = miForm.cleaned_data["imagen"]
+            #_________ Borrar avatares viejos
+            avatarViejo = Avatar.objects.filter(user=usuario)
+            if len(avatarViejo) > 0:
+                for i in range(len(avatarViejo)):
+                    avatarViejo[i].delete()
+            #__________________________________________
+            avatar = Avatar(user=usuario, imagen=imagen)
+            avatar.save()
 
-      #Voy al html que me permite editar
-      return render(request, "AppCoder/editarPerfil.html", {"miFormulario":miFormulario, "usuario":usuario})
+            #_________ Enviar la imagen al home
+            imagen = Avatar.objects.get(user=usuario).imagen.url
+            request.session["avatar"] = imagen
+            #____________________________________________________
+            return redirect(reverse_lazy("home"))
+    else:
+        miForm = AvatarForm()
+    return render(request, "entidades/agregarAvatar.html", {"form": miForm})    
 
+def cliente (request):
 
-
+      return render(request, "misdatos/clientes.html")
 # Busqueda De Productos 
 def buscarProducto(request):
     return render(request, "misdatos/buscar.html")

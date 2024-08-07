@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.urls import path, include
 from misdatos.views import *
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('', inicio, name="inicio"),
@@ -30,11 +31,19 @@ urlpatterns = [
     path('delete_Clinte/<id_cliente>/', deleteCliente, name="delete_Cliente" ),
     path('create_clinte/', createClinte, name="create_Clinte" ),  
     path('buscarProductos', buscarProducto , name ="buscar"),
+ #Crud cliente
+    #path('Clientes/', ClientesList.as_view(), name="Cliente"),    
+   # path('clienteCreate/', createClinte.as_view(), name="clienteCreate"), 
+    #path('clienteUpdate/<int:pk>/', updateCliente.as_view(), name="clienteUpdate"), 
+    # path('clinteDelete/<int:pk>/', clinteDelete.as_view(), name="clienteDelete"), 
+#buscador
     path('buscar2/', buscar2, name="buscar"),
     path('register',register,name= "register"), 
-    path('login', login_request, name = 'Login'),
-    path('register', register, name = 'Register'),
-    path('logout', LogoutView.as_view(template_name='misdatos/logout.html'), name = 'Logout'),
+#Loging/Logout
+    path('login/', loginRequest, name="login"),
+    path('logout/', LogoutView.as_view(template_name="entidades/logout.html"), name="logout"),
+    path('registro/', register, name="registro"),
+    
 
 ]
 

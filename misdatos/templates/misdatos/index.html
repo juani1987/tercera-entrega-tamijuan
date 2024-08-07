@@ -45,6 +45,18 @@
                     <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="{% url 'tusdatos' %}">Formulario</a></li>
                     <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="{% url 'buscar' %}">Buscar</a></li>
                     <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="{% url 'register' %}">Registro</a></li>
+                    <p style = color:red > [{{user.username}}]<p>
+            {%if user.username is_ahenticate%}
+                        <a class="nav-link text-uppercase" href="{%url 'editarPerfil'%}">Edita tu perfil</a>
+                        <a class="nav-link text-uppercase" href="{%url 'tusdatos'%}">MasCafe</a>
+                        <a class="btn btn-success" href="{% url 'perfil' %}">Perfil</a>
+                <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a class="btn btn-primary" href="{% url 'login' %}">Login</a>
+                <a class="btn btn-success" href="{% url 'registro' %}">Registrate</a>
+            {% endif %}
+                 
+            
                 </ul>   
             </div>
         </div>
